@@ -22,6 +22,7 @@ const (
 type Player struct {
   Name string // Player's name
   Playing uint // What the player is playing
+  Point int
   Room int // Which room they're playing in
   Socket *websocket.Conn // Their underlying websocket
   JoinOk chan bool // Set back from a room upon sending a join request
@@ -71,7 +72,7 @@ func sendPlayer(player *Player) {
       continue
     }
 
-    fmt.Fprintf(info.Socket, "player %d:%d:%s", player.Playing, player.Room, player.Name)
+    fmt.Fprintf(info.Socket, "player %d:%d:%d:%s", player.Playing,player.Point, player.Room, player.Name)
   }
 }
 
