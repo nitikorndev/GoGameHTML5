@@ -2,6 +2,7 @@ var games = ["Lobby", "Uno", "Canasta"];
 var players = new Object();
 
 $(document).ready(function() {
+    
   var connection = new WebSocket("ws://localhost:6900/lobby");
 
   $("#nameform").submit(function() {
@@ -15,14 +16,9 @@ $(document).ready(function() {
   $("#creategame").submit(function() {
     connection.send("create " + $("select#games").val() + "\n");
     $("#creategame").fadeOut();
-
     return false;
   });
-
-  // connection.onopen = function() {
-    // connection.send("Ping");
-  // };
-
+  
   connection.onmessage = function(e) {
     var args = e.data.split(" ", 2);
     switch (args[0]) {
@@ -32,12 +28,12 @@ $(document).ready(function() {
       player.game = games[info[0]];
       player.room = info[0] == 0 ? "" : info[1];
       player.name = info[2];
- 	player.point = info[3];
+        player.point = info[3];
 
       if (!players.hasOwnProperty(player.name)) {
-        $("#userlist").append("<tr id=\"player-"+player.name+"\"></tr>");
+        $("#userlist").append("<tr id=\"player-"+player.name+"\">");
       }
-      $("#userlist #player-"+player.name).html("<td>"+player.name+"</td><td>"+player.game+"</td><td>"+player.point+"</td><td>"+player.room+"</td>");
+      $("#userlist #player-"+player.name).html("<td>"+player.name+"</td><td>"+player.game+"</td><td>"+player.point+"</td><td>"+player.room+"</td></tr>");
 
       players[player.name] = player;
 
@@ -48,4 +44,6 @@ $(document).ready(function() {
       break;
     }
   };
+ 
+  
 });
