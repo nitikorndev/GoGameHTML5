@@ -40,7 +40,7 @@ type Room struct {
 
 var users map[string]*Player = make(map[string]*Player)
 var rooms map[int]*Room = make(map[int]*Room)
-var listenAddress string = ":12345"
+var listenAddress string = ":6900"
 var getRoomID chan int = make(chan int)
 
 // Simple counter for room identifiers
@@ -61,7 +61,7 @@ func EchoServer(ws *websocket.Conn) {
 // Send the entire player list to a client
 func sendPlayers(ws *websocket.Conn) {
   for _, info := range users {
-    fmt.Fprintf(ws, "player %d:%d:%s", info.Playing, info.Room, info.Name)
+    fmt.Fprintf(ws, "player %d:%d:%s:%d", info.Playing, info.Room, info.Name,info.Point)
   }
 }
 
