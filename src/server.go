@@ -23,6 +23,7 @@ type Player struct {
   Name string // Player's name
   Playing uint // What the player is playing
   Point int
+  Do string
   Room int // Which room they're playing in
   Socket *websocket.Conn // Their underlying websocket
   JoinOk chan bool // Set back from a room upon sending a join request
@@ -61,7 +62,7 @@ func EchoServer(ws *websocket.Conn) {
 // Send the entire player list to a client
 func sendPlayers(ws *websocket.Conn) {
   for _, info := range users {
-    fmt.Fprintf(ws, "player %d:%d:%s:%d", info.Playing, info.Room, info.Name,info.Point)
+    fmt.Fprintf(ws, "player %d:%d:%s:%d", info.Playing, info.Room, info.Name,info.Point,info.Do)
   }
 }
 
@@ -71,7 +72,7 @@ func sendPlayer(player *Player) {
     if info == player {
       continue
     }
-    fmt.Fprintf(info.Socket, "player %d:%d:%s:%d", player.Playing, player.Room, player.Name,player.Point)
+    fmt.Fprintf(info.Socket, "player %d:%d:%s:%d", player.Playing, player.Room, player.Name,player.Point,player.Do)
   }
 }
 
@@ -89,7 +90,7 @@ func LobbyServer(ws *websocket.Conn) {
       break
     }
 
-    msg := strings.Split(br, " ", 2)
+    msg := strings.Split(br, " ", 3)
 
     switch msg[0] {
     case "connect":
@@ -110,7 +111,6 @@ func LobbyServer(ws *websocket.Conn) {
         ws.Close()
         return
       }
-
     case "create":
       if inGame {
         fmt.Fprint(ws, "error Already in a game")
@@ -164,7 +164,13 @@ func LobbyServer(ws *websocket.Conn) {
         fmt.Fprint(ws, "error Not in a game")
         continue
       }
+      
+    case "ans":
+        fmt.Printf("Message: %s:%s\n", msg[1],msg[2])
+        
+        continue
 
+      
       rooms[player.Room].QuitChan <- player
       inGame = false
 
@@ -210,7 +216,9 @@ func UnoGame(room *Room) {
   // Deny further join requests
   go quitter(room.JoinChan, make(chan bool))
 }
+func loop() {
 
+}
 func main() {
   http.Handle("/echo", websocket.Handler(EchoServer))
   http.Handle("/lobby", websocket.Handler(LobbyServer))

@@ -4,12 +4,13 @@
         <title>Go Games</title>
         <script src="jquery.js" type="text/javascript"></script>
         <script src="games.js" type="text/javascript"></script>
+        <script src="client.js" type="text/javascript"></script>
         <link rel="stylesheet" href="games.css">
             <style type="text/css">
             #t{font-size: 30px; color: blue;}
         </style>
     </head>
-    <body>
+    <body onLoad="javascript:init();">
         <a id="t">Typing Game Contest</a>
         <form id="nameform">
             <label for="name">Enter your name:</label>
@@ -38,7 +39,7 @@
                 </td>
             </tr>
             <tr>
-                <td><input type="text" size="30" id="in"></td>
+                <td align="center"><form id="in"><input type="text" id="ans" size="30" oninput="javascript:init();send();"></form></td>
             </tr>
         </table>
     </body>
