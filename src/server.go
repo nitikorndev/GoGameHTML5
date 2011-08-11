@@ -23,7 +23,10 @@ type Player struct {
   Name string // Player's name
   Playing uint // What the player is playing
   Point int
+  Hp int
   Do string
+  X int
+  Y int
   Room int // Which room they're playing in
   Socket *websocket.Conn // Their underlying websocket
   JoinOk chan bool // Set back from a room upon sending a join request
@@ -62,7 +65,7 @@ func EchoServer(ws *websocket.Conn) {
 // Send the entire player list to a client
 func sendPlayers(ws *websocket.Conn) {
   for _, info := range users {
-    fmt.Fprintf(ws, "player %d:%d:%s:%d", info.Playing, info.Room, info.Name,info.Point,info.Do)
+    fmt.Fprintf(ws, "player %d:%d:%s:%d:%s:%d:%d:%d", info.Playing, info.Room, info.Name, info.Point, info.Do, info.Hp, info.X, info.Y)
   }
 }
 
@@ -72,7 +75,7 @@ func sendPlayer(player *Player) {
     if info == player {
       continue
     }
-    fmt.Fprintf(info.Socket, "player %d:%d:%s:%d", player.Playing, player.Room, player.Name,player.Point,player.Do)
+    fmt.Fprintf(info.Socket, "player %d:%d:%s:%d:%s:%d:%d:%d", player.Playing, player.Room, player.Name, player.Point, player.Do, player.Hp, player.X, player.Y)
   }
 }
 
@@ -90,7 +93,7 @@ func LobbyServer(ws *websocket.Conn) {
       break
     }
 
-    msg := strings.Split(br, " ", 3)
+    msg := strings.Split(br, " ", 6)
 
     switch msg[0] {
     case "connect":
@@ -166,14 +169,20 @@ func LobbyServer(ws *websocket.Conn) {
       }
       
     case "ans":
-        fmt.Printf("Message: %s:%s\n", msg[1],msg[2])
+       user := strings.TrimSpace(msg[1])
+        do := strings.TrimSpace(msg[2])
+        x,_ := strconv.Atoi(msg[3])
         
-        continue
-
-      
-      rooms[player.Room].QuitChan <- player
-      inGame = false
-
+        y,_ := strconv.Atoi( strings.TrimSpace(msg[4]))
+        // fmt.Printf("Got connection from %s\n", username)
+   player = &Player{Name:user,
+                         Do:do,
+                         X:x,
+                         Y:y}
+        sendPlayer(player)
+        //sendPlayers(ws)
+         continue
+         
     default:
       fmt.Printf("Unknown message: %s\n", br)
     }
