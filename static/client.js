@@ -1,10 +1,10 @@
 var c;
 var cx;
 var str="";
-var cv,ccv,x=0,y=0,ballX=10,ballY=10,stepX=1,stepY=1,score=0,lv=1;
+var cv,ccv,x=0,y=0,ballX=10,ballY=10,stepX=3,stepY=3,score=0,lv=1;
 function loop(){
-    setTimeout("end()",3)
-    }
+    setTimeout("end()",50)
+}
 function end(){
     update();
     draw();
@@ -22,22 +22,24 @@ function update(){
     if(ballY<5){
         stepY*=(-1);
     }
-    if(ballY>=485&&(ballX>x&&ballX<=(x+100))){
+    if(ballY>=485&&(ballX>x&&ballX<=(x+100))&&inGame){
+
         stepY*=(-1);
         score+=lv;
-        connection.send("point "+name+" "+score+"\n")
+        connection.send("point "+name+" "+score+"\n");
         if(score%(10*lv)==0){
             lv++;
         }
     }
-if(ballY>=495){
-    document.getElementById("status").innerHTML="สถานะ : คุณแพ้แล้ว";
-    return;
-}
-ballX+=(stepX);
-ballY+=(stepY);	
-document.getElementById("level").innerHTML="ระดับ: "+lv;
-document.getElementById("score").innerHTML="คะแนน : "+score;
+    if(ballY>=495){
+        inGame = false;
+        document.getElementById("status").innerHTML="สถานะ : คุณแพ้แล้ว";
+        return;
+    }
+    ballX+=(stepX);
+    ballY+=(stepY);	
+    document.getElementById("level").innerHTML="ระดับ: "+lv;
+    document.getElementById("score").innerHTML="คะแนน : "+score;
 }
 function draw(){
     cv = document.getElementById("cv");
