@@ -1,6 +1,7 @@
-<!DOCTYPE HTML>
-<html>
-    <head>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>Go Games</title>
         <script src="jquery.js" type="text/javascript"></script>
         <script src="games.js" type="text/javascript"></script>
@@ -11,8 +12,8 @@
         </style>
     </head>
     <body onLoad="javascript:init();">
-        <a id="t">Battle Game Contest</a>
-        <form id="nameform">
+        <a id="t">Battle Game Contest</a><br>
+           <form id="nameform">
             <label for="name">Enter your name:</label>
             <input id="name">
         </form>
@@ -24,27 +25,24 @@
         </form>
         <table>
             <tr><td>
-                    <canvas id="cv" width=550px height=400px>
+                    <canvas id="cv" width=550px height=500px>
                     </canvas>
                 </td>
                 <td valign="top">
                     <table id="userlist">
                         <tr>
                             <th>Username</th>
-                            <th>Game</th>
                             <th>Point</th>
-                            <th>Room</th>
-                            <th>Do</th>
-                            <th>Hp</th>
-                            <th>X</th>
-                            <th>Y</th>
                         </tr>
                     </table>
                 </td>
             </tr>
             <tr>
-                <td align="center"><form id="in"><input type="text" id="ans" size="30" oninput="javascript:init();send();"></form></td>
+                <td align="center"><input type="button" id="go" value="Start Game" OnClick = "JavaScript:start();"></td>
             </tr>
         </table>
+        <div id="status">สถานะ : <a id="status">รอ...</a></div>
+        <div id="level">ระดับ : 1</div>
+        <div id="score">คะแนน : 0</div>
     </body>
 </html>
